@@ -133,6 +133,33 @@ ErrorCode Wdt::wdtSend(const WdtTransferRequest &req,
   return errCode;
 }
 
+ErrorCode Wdt::wdtSend(const WdtTransferRequest &req,
+                       SenderPtr* ptr,
+                       std::shared_ptr<IAbortChecker> abortChecker,
+                       bool terminateExistingOne
+                       ) {
+  SenderPtr sender;
+  ErrorCode errCode =
+      createWdtSender(req, abortChecker, terminateExistingOne, sender);
+  if (errCode != OK) {
+    return errCode;
+  }
+  ptr = &sender;
+  const std::string &wdtNamespace = req.wdtNamespace;
+  auto validatedReq = sender->init();
+  if (validatedReq.errorCode != OK) {
+    WLOG(ERROR) << "Couldn't init sender with request for " << wdtNamespace;
+    return validatedReq.errorCode;
+  }
+  auto transferReport = sender->transfer();
+  errCode = transferReport->getSummary().getErrorCode();
+  releaseWdtSender(req);
+  WLOG(INFO) << "wdtSend for " << wdtNamespace << " " << req.hostName
+             << " ended with " << errorCodeToStr(errCode);
+  return errCode;
+}
+
+
 ErrorCode Wdt::wdtReceiveStart(const std::string &wdtNamespace,
                                WdtTransferRequest &req,
                                const std::string &identifier,

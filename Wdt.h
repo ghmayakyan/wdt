@@ -78,6 +78,12 @@ class Wdt {
       std::shared_ptr<IAbortChecker> abortChecker = nullptr,
       bool terminateExistingOne = false);
 
+  virtual ErrorCode wdtSend(
+      const WdtTransferRequest &wdtRequest,
+      SenderPtr* ptr,
+      std::shared_ptr<IAbortChecker> abortChecker = nullptr,
+      bool terminateExistingOne = false);
+
   virtual ErrorCode createWdtSender(const WdtTransferRequest &wdtRequest,
                                     std::shared_ptr<IAbortChecker> abortChecker,
                                     bool terminateExistingOne,
