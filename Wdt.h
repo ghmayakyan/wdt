@@ -80,7 +80,7 @@ class Wdt {
 
   virtual ErrorCode wdtSend(
       const WdtTransferRequest &wdtRequest,
-      SenderPtr* ptr,
+      SenderPtr** ptr,
       std::shared_ptr<IAbortChecker> abortChecker = nullptr,
       bool terminateExistingOne = false);
 

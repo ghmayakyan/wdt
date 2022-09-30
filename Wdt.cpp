@@ -134,7 +134,7 @@ ErrorCode Wdt::wdtSend(const WdtTransferRequest &req,
 }
 
 ErrorCode Wdt::wdtSend(const WdtTransferRequest &req,
-                       SenderPtr* ptr,
+                       SenderPtr** ptr,
                        std::shared_ptr<IAbortChecker> abortChecker,
                        bool terminateExistingOne
                        ) {
@@ -144,7 +144,7 @@ ErrorCode Wdt::wdtSend(const WdtTransferRequest &req,
   if (errCode != OK) {
     return errCode;
   }
-  ptr = &sender;
+  *ptr = &sender;
   const std::string &wdtNamespace = req.wdtNamespace;
   auto validatedReq = sender->init();
   if (validatedReq.errorCode != OK) {
